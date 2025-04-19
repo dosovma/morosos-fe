@@ -7,13 +7,14 @@ export default function CreateAgreementPage() {
     const [elapsed, setElapsed] = useState('');
     const [aptInfo, setAptInfo] = useState(null);
     const navigate = useNavigate();
+    const aptId = '227a77a3-ee4a-4b5e-b170-cb56e6c829c7';
 
     useEffect(() => {
         // fetch apartment info before rendering form
         async function fetchApt() {
             try {
                 const res = await fetch(
-                    'https://j4mc0vpyp2.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/34d08177-e842-4d44-af86-7c2386dda01c'
+                    `https://j4mc0vpyp2.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}`
                 );
                 if (!res.ok) throw new Error('Failed to fetch apartment info');
                 const data = await res.json();
