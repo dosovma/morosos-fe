@@ -26,7 +26,7 @@ function Switch({ checked, disabled = false }) {
 export default function ApartmentStatusPage() {
     const [landlord, setLandlord] = useState(null);
     const [devices, setDevices] = useState([]);
-    const aptId = '227a77a3-ee4a-4b5e-b170-cb56e6c829c7';
+    const aptId = '34d08177-e842-4d44-af86-7c2386dda01c';
 
     useEffect(() => {
         async function fetchStatus() {

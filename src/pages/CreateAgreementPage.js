@@ -7,7 +7,7 @@ export default function CreateAgreementPage() {
     const [elapsed, setElapsed] = useState('');
     const [aptInfo, setAptInfo] = useState(null);
     const navigate = useNavigate();
-    const aptId = '227a77a3-ee4a-4b5e-b170-cb56e6c829c7';
+    const aptId = '34d08177-e842-4d44-af86-7c2386dda01c';
 
     useEffect(() => {
         // fetch apartment info before rendering form
