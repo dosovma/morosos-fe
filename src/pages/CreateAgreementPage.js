@@ -2,15 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function CreateAgreementPage() {
+    const aptId = '34d08177-e842-4d44-af86-7c2386dda01c';
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [elapsed, setElapsed] = useState('');
     const [aptInfo, setAptInfo] = useState(null);
     const navigate = useNavigate();
-    const aptId = '34d08177-e842-4d44-af86-7c2386dda01c';
 
     useEffect(() => {
-        // fetch apartment info before rendering form
         async function fetchApt() {
             try {
                 const res = await fetch(
@@ -25,7 +24,7 @@ export default function CreateAgreementPage() {
             }
         }
         fetchApt();
-    }, []);
+    }, [aptId]);
 
     const handleSubmit = async e => {
         e.preventDefault();

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 function Switch({ checked, onChange, disabled = false }) {
     const labelStyle = { position: 'relative', display: 'inline-block', width: 40, height: 20 };
@@ -27,6 +27,7 @@ function Switch({ checked, onChange, disabled = false }) {
 
 export default function AgreementPage() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [agreement, setAgreement] = useState(null);
     const [autoDetect, setAutoDetect] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
@@ -64,9 +65,8 @@ export default function AgreementPage() {
                 }
             );
             if (!res.ok) throw new Error();
-            // reload to get updated status/text
-            const updated = await res.json();
-            setAgreement(prev => ({ ...prev, status: updated.status, text: updated.text }));
+            // After successful sign, refresh page
+            navigate(`/agreement/${id}`);
         } catch {
             alert('Error signing agreement');
         }
@@ -80,7 +80,7 @@ export default function AgreementPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: 300 }}>
             <button
                 onClick={handleSign}
-                style={buttonStyles}
+                style={{ ...buttonStyles, background: isSigned ? '#ccc' : '#4285f4', cursor: isSigned ? 'not-allowed' : 'pointer' }}
                 disabled={isSigned}
             >
                 Sign
@@ -89,6 +89,7 @@ export default function AgreementPage() {
                 <Switch
                     checked={autoDetect}
                     onChange={() => setAutoDetect(!autoDetect)}
+                    disabled={isSigned}
                 />{' '}
                 <span>Turn on automatic detect system</span>
             </div>
@@ -98,4 +99,4 @@ export default function AgreementPage() {
     );
 }
 
-const buttonStyles = { padding: 10, background: '#4285f4', color: '#fff', border: 'none', cursor: 'pointer', width: '100%' };
+const buttonStyles = { padding: 10, color: '#fff', border: 'none', width: '100%' };

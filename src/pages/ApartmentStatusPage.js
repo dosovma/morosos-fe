@@ -43,7 +43,7 @@ export default function ApartmentStatusPage() {
             }
         }
         fetchStatus();
-    }, []);
+    }, [aptId]);
 
     if (!landlord) return <div>Loading...</div>;
 
