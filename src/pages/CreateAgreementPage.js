@@ -26,7 +26,7 @@ export default function CreateAgreementPage() {
             );
             if (!res.ok) throw new Error('Failed to create agreement');
             const data = await res.json();
-            navigate(`/agreement/${data.apartment_id}`);
+            navigate(`/agreement/${data.agreement_id}`);
         } catch (err) {
             console.error(err);
             alert('Error creating agreement');
