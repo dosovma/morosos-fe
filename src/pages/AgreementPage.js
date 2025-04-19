@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 function Switch({ checked, onChange, disabled = false }) {
     const labelStyle = { position: 'relative', display: 'inline-block', width: 40, height: 20 };
@@ -27,25 +27,26 @@ function Switch({ checked, onChange, disabled = false }) {
 
 export default function AgreementPage() {
     const { id } = useParams();
-    const navigate = useNavigate();
     const [agreement, setAgreement] = useState(null);
     const [autoDetect, setAutoDetect] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
 
-    useEffect(() => {
-        async function fetchAgreement() {
-            try {
-                const res = await fetch(
-                    `https://j4mc0vpyp2.execute-api.eu-north-1.amazonaws.com/test/api/v1/agreements/${id}`
-                );
-                if (!res.ok) throw new Error();
-                const data = await res.json();
-                setAgreement(data);
-                setAutoDetect(data.auto_detect_system_enabled || false);
-            } catch {
-                alert('Error loading agreement');
-            }
+    const fetchAgreement = async () => {
+        try {
+            const res = await fetch(
+                `https://j4mc0vpyp2.execute-api.eu-north-1.amazonaws.com/test/api/v1/agreements/${id}`
+            );
+            if (!res.ok) throw new Error('Failed to fetch agreement');
+            const data = await res.json();
+            setAgreement(data);
+            setAutoDetect(data.auto_detect_system_enabled || false);
+        } catch (err) {
+            console.error(err);
+            alert('Error loading agreement');
         }
+    };
+
+    useEffect(() => {
         fetchAgreement();
     }, [id]);
 
@@ -64,10 +65,12 @@ export default function AgreementPage() {
                     body: JSON.stringify({ action: 'sign' })
                 }
             );
-            if (!res.ok) throw new Error();
-            // After successful sign, refresh page
-            navigate(`/agreement/${id}`);
-        } catch {
+            if (!res.ok) throw new Error('Failed to sign agreement');
+            await res.json();
+            // refresh data
+            fetchAgreement();
+        } catch (err) {
+            console.error(err);
             alert('Error signing agreement');
         }
     };
