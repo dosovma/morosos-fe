@@ -23,32 +23,76 @@ function Switch({ checked, disabled = false }) {
     );
 }
 
+const buttonStyles = { padding: 10, background: '#4285f4', color: '#fff', border: 'none', cursor: 'pointer', width: '100%', marginBottom: 10 };
 export default function ApartmentStatusPage() {
     const [landlord, setLandlord] = useState(null);
     const [devices, setDevices] = useState([]);
     const aptId = '34d08177-e842-4d44-af86-7c2386dda01c';
 
-    useEffect(() => {
-        async function fetchStatus() {
-            try {
-                const res = await fetch(
-                    `https://j4mc0vpyp2.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}`
-                );
-                if (!res.ok) throw new Error();
-                const data = await res.json();
-                setLandlord(data.landlord);
-                setDevices(data.devices || []);
-            } catch {
-                alert('Error loading apartment status');
-            }
+    const fetchStatus = async () => {
+        try {
+            const res = await fetch(
+                `https://j4mc0vpyp2.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}`
+            );
+            if (!res.ok) throw new Error('Failed to fetch apartment status');
+            const data = await res.json();
+            setLandlord(data.landlord);
+            setDevices(data.devices || []);
+        } catch (err) {
+            console.error(err);
+            alert('Error loading apartment status');
         }
+    };
+
+    useEffect(() => {
         fetchStatus();
     }, [aptId]);
+
+    const handleTurnOn = async () => {
+        try {
+            const res = await fetch(
+                `https://j4mc0vpyp2.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/status`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'apartment_off' })
+                }
+            );
+            if (!res.ok) throw new Error('Failed to turn on apartment');
+            await res.json();
+            fetchStatus();
+        } catch (err) {
+            console.error(err);
+            alert('Error turning on apartment');
+        }
+    };
+
+    const handleTurnOff = async () => {
+        try {
+            const res = await fetch(
+                `https://j4mc0vpyp2.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/status`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'apartment_on' })
+                }
+            );
+            if (!res.ok) throw new Error('Failed to turn off apartment');
+            await res.json();
+            fetchStatus();
+        } catch (err) {
+            console.error(err);
+            alert('Error turning off apartment');
+        }
+    };
 
     if (!landlord) return <div>Loading...</div>;
 
     return (
         <div style={{ width: 300 }}>
+            <button onClick={handleTurnOn} style={buttonStyles}>TurnOn</button>
+            <button onClick={handleTurnOff} style={buttonStyles}>TurnOff</button>
+
             <h2>Landlord</h2>
             <p>Name: {landlord.name}</p>
             <p>Surname: {landlord.surname}</p>
