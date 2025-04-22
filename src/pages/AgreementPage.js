@@ -30,11 +30,12 @@ export default function AgreementPage() {
     const [agreement, setAgreement] = useState(null);
     const [autoDetect, setAutoDetect] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
+    const aptId = 'e3abab76-6c94-419f-a7de-e97a01af62db';
 
     const fetchAgreement = async () => {
         try {
             const res = await fetch(
-                `https://j4mc0vpyp2.execute-api.eu-north-1.amazonaws.com/test/api/v1/agreements/${id}`
+                `https://gtw06or8tl.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/agreements/${id}`
             );
             if (!res.ok) throw new Error('Failed to fetch agreement');
             const data = await res.json();
@@ -52,13 +53,13 @@ export default function AgreementPage() {
 
     const handleSign = async () => {
         if (!autoDetect) {
-            setErrorMsg('You have to turn on automation detection');
+            setErrorMsg('Debes activar la desconexión automática');
             return;
         }
         setErrorMsg('');
         try {
             const res = await fetch(
-                `https://j4mc0vpyp2.execute-api.eu-north-1.amazonaws.com/test/api/v1/agreements/${id}/status`,
+                `https://gtw06or8tl.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/agreements/${id}/status`,
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -94,7 +95,7 @@ export default function AgreementPage() {
                     onChange={() => setAutoDetect(!autoDetect)}
                     disabled={isSigned}
                 />{' '}
-                <span>Turn on automatic detect system</span>
+                <span>Activar sistema de desconexión automática.</span>
             </div>
             {errorMsg && <p style={{ color: 'red' }}>{errorMsg}</p>}
             <div>{agreement.text}</div>

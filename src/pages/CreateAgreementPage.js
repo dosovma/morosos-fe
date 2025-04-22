@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function CreateAgreementPage() {
-    const aptId = '34d08177-e842-4d44-af86-7c2386dda01c';
+    const aptId = 'e3abab76-6c94-419f-a7de-e97a01af62db';
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [elapsed, setElapsed] = useState('');
@@ -13,7 +13,7 @@ export default function CreateAgreementPage() {
         async function fetchApt() {
             try {
                 const res = await fetch(
-                    `https://j4mc0vpyp2.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}`
+                    `https://gtw06or8tl.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}`
                 );
                 if (!res.ok) throw new Error('Failed to fetch apartment info');
                 const data = await res.json();
@@ -30,13 +30,11 @@ export default function CreateAgreementPage() {
         e.preventDefault();
         const payload = {
             tenant: { name, surname },
-            start_at: elapsed,
-            apartment: aptInfo.id,
             elapsed_at: elapsed
         };
         try {
             const res = await fetch(
-                'https://j4mc0vpyp2.execute-api.eu-north-1.amazonaws.com/test/api/v1/agreements',
+                `https://gtw06or8tl.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/agreements`,
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -54,21 +52,21 @@ export default function CreateAgreementPage() {
 
     if (!aptInfo) return <div>Loading...</div>;
 
-    const title = `Арендное соглашение с ${aptInfo.landlord.name} ${aptInfo.landlord.surname} по апартаментам ${aptInfo.id}`;
+    const title = `Acuerdo adicional al contrato de arrendamiento de apartamento, casa u otra vivienda, ubicado en ${aptInfo.address}`;
 
     return (
         <form onSubmit={handleSubmit} style={formStyles}>
-            <h2>Create Agreement</h2>
+            <h2>Por favor, introduzca sus datos para firmar el acuerdo:</h2>
             <p>{title}</p>
             <input
-                placeholder="Name"
+                placeholder="Nombre"
                 value={name}
                 onChange={e => setName(e.target.value)}
                 style={inputStyles}
                 required
             />
             <input
-                placeholder="Surname"
+                placeholder="Apellido"
                 value={surname}
                 onChange={e => setSurname(e.target.value)}
                 style={inputStyles}
@@ -76,12 +74,13 @@ export default function CreateAgreementPage() {
             />
             <input
                 type="date"
+                placeholder="Fecha de finalización del contrato"
                 value={elapsed}
                 onChange={e => setElapsed(e.target.value)}
                 style={inputStyles}
                 required
             />
-            <button type="submit" style={buttonStyles}>Submit</button>
+            <button type="submit" style={buttonStyles}>Enviar</button>
         </form>
     );
 }

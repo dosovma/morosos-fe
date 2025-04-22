@@ -27,7 +27,7 @@ const buttonStyles = { padding: 10, background: '#4285f4', color: '#fff', border
 export default function ApartmentStatusPage() {
     const [landlord, setLandlord] = useState(null);
     const [devices, setDevices] = useState([]);
-    const aptId = '34d08177-e842-4d44-af86-7c2386dda01c';
+    const aptId = 'e3abab76-6c94-419f-a7de-e97a01af62db';
 
     const fetchStatus = async () => {
         try {
@@ -51,11 +51,11 @@ export default function ApartmentStatusPage() {
     const handleTurnOn = async () => {
         try {
             const res = await fetch(
-                `https://j4mc0vpyp2.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/status`,
+                `https://gtw06or8tl.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/statuses`,
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'apartment_off' })
+                    body: JSON.stringify({ action: 'apartment_on' })
                 }
             );
             if (!res.ok) throw new Error('Failed to turn on apartment');
@@ -70,11 +70,11 @@ export default function ApartmentStatusPage() {
     const handleTurnOff = async () => {
         try {
             const res = await fetch(
-                `https://j4mc0vpyp2.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/status`,
+                `https://gtw06or8tl.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/statuses`,
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'apartment_on' })
+                    body: JSON.stringify({ action: 'apartment_off' })
                 }
             );
             if (!res.ok) throw new Error('Failed to turn off apartment');
@@ -90,14 +90,14 @@ export default function ApartmentStatusPage() {
 
     return (
         <div style={{ width: 300 }}>
-            <button onClick={handleTurnOn} style={buttonStyles}>TurnOn</button>
-            <button onClick={handleTurnOff} style={buttonStyles}>TurnOff</button>
+            <button onClick={handleTurnOn} style={buttonStyles}>Encender</button>
+            <button onClick={handleTurnOff} style={buttonStyles}>Apagar</button>
 
-            <h2>Landlord</h2>
-            <p>Name: {landlord.name}</p>
-            <p>Surname: {landlord.surname}</p>
+            <h2>Propietario</h2>
+            <p>Nombre: {landlord.name}</p>
+            <p>Apellido: {landlord.surname}</p>
 
-            <h2>Devices</h2>
+            <h2>Control de electricidad y agua</h2>
             {devices.map(dev => (
                 <div key={dev.id} style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '5px 0' }}>
                     <Switch checked={dev.on} disabled />
