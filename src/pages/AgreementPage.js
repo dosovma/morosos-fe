@@ -59,7 +59,7 @@ export default function AgreementPage() {
         setErrorMsg('');
         try {
             const res = await fetch(
-                `https://gtw06or8tl.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/agreements/${id}/status`,
+                `https://gtw06or8tl.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/agreements/${id}/statuses`,
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -87,7 +87,7 @@ export default function AgreementPage() {
                 style={{ ...buttonStyles, background: isSigned ? '#ccc' : '#4285f4', cursor: isSigned ? 'not-allowed' : 'pointer' }}
                 disabled={isSigned}
             >
-                Sign
+                Firmar
             </button>
             <div>
                 <Switch

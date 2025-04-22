@@ -32,7 +32,7 @@ export default function ApartmentStatusPage() {
     const fetchStatus = async () => {
         try {
             const res = await fetch(
-                `https://j4mc0vpyp2.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}`
+                `https://gtw06or8tl.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}`
             );
             if (!res.ok) throw new Error('Failed to fetch apartment status');
             const data = await res.json();
