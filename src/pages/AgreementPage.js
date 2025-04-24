@@ -1,12 +1,47 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+const baseFont = {
+    fontFamily: '"Open Sans", sans-serif',
+    fontSize: 16,
+    color: '#2B3133'
+};
+
+const buttonStyles = {
+    ...baseFont,
+    padding: 10,
+    background: '#0E6FAA',
+    color: '#fff',
+    border: 'none',
+    cursor: 'pointer',
+    width: '100%'
+};
+
 function Switch({ checked, onChange, disabled = false }) {
     const labelStyle = { position: 'relative', display: 'inline-block', width: 40, height: 20 };
     const inputStyle = { opacity: 0, width: 0, height: 0 };
-    const sliderBase = { position: 'absolute', cursor: disabled ? 'default' : 'pointer', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: '#ccc', transition: '.4s', borderRadius: 20 };
-    const sliderChecked = { backgroundColor: '#4285f4' };
-    const knobBase = { position: 'absolute', height: 16, width: 16, left: 2, bottom: 2, backgroundColor: 'white', transition: '.4s', borderRadius: '50%' };
+    const sliderBase = {
+        position: 'absolute',
+        cursor: disabled ? 'default' : 'pointer',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: '#99A7BC',
+        transition: '.4s',
+        borderRadius: 20
+    };
+    const sliderChecked = checked ? { backgroundColor: disabled ? '#99A7BC' : '#0E6FAA' } : {};
+    const knobBase = {
+        position: 'absolute',
+        height: 16,
+        width: 16,
+        left: 2,
+        bottom: 2,
+        backgroundColor: 'white',
+        transition: '.4s',
+        borderRadius: '50%'
+    };
     const knobChecked = { transform: 'translateX(20px)' };
 
     return (
@@ -18,7 +53,7 @@ function Switch({ checked, onChange, disabled = false }) {
                 onChange={onChange}
                 style={inputStyle}
             />
-            <span style={{ ...sliderBase, ...(checked ? sliderChecked : {}) }}>
+            <span style={{ ...sliderBase, ...sliderChecked }}>
         <span style={{ ...knobBase, ...(checked ? knobChecked : {}) }} />
       </span>
         </label>
@@ -68,7 +103,6 @@ export default function AgreementPage() {
             );
             if (!res.ok) throw new Error('Failed to sign agreement');
             await res.json();
-            // refresh data
             fetchAgreement();
         } catch (err) {
             console.error(err);
@@ -76,15 +110,19 @@ export default function AgreementPage() {
         }
     };
 
-    if (!agreement) return <div>Loading...</div>;
+    if (!agreement) return <div style={baseFont}>Cargando...</div>;
 
     const isSigned = agreement.status === 'signed';
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: 300 }}>
+        <div style={{ ...baseFont, display: 'flex', flexDirection: 'column', gap: 10, width: 300 }}>
             <button
                 onClick={handleSign}
-                style={{ ...buttonStyles, background: isSigned ? '#ccc' : '#4285f4', cursor: isSigned ? 'not-allowed' : 'pointer' }}
+                style={{
+                    ...buttonStyles,
+                    background: isSigned ? '#99A7BC' : '#0E6FAA',
+                    cursor: isSigned ? 'not-allowed' : 'pointer'
+                }}
                 disabled={isSigned}
             >
                 Firmar
@@ -95,12 +133,10 @@ export default function AgreementPage() {
                     onChange={() => setAutoDetect(!autoDetect)}
                     disabled={isSigned}
                 />{' '}
-                <span>Activar sistema de desconexión automática.</span>
+                <span style={baseFont}>Activar sistema de desconexión automática.</span>
             </div>
-            {errorMsg && <p style={{ color: 'red' }}>{errorMsg}</p>}
-            <div>{agreement.text}</div>
+            {errorMsg && <p style={{ color: '#50BCDA' }}>{errorMsg}</p>}
+            <div dangerouslySetInnerHTML={{ __html: agreement.text }} />
         </div>
     );
 }
-
-const buttonStyles = { padding: 10, color: '#fff', border: 'none', width: '100%' };

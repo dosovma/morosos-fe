@@ -1,6 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const baseFont = {
+    fontFamily: '"Open Sans", sans-serif',
+    fontSize: 16,
+    color: '#2B3133'
+};
+
+const formStyles = {
+    ...baseFont,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 10,
+    width: 300
+};
+
+const inputStyles = {
+    ...baseFont,
+    padding: 8,
+    border: '1px solid #ccc'
+};
+
+const buttonStyles = {
+    ...baseFont,
+    padding: 10,
+    background: '#0E6FAA',
+    color: '#fff',
+    border: 'none',
+    cursor: 'pointer',
+    width: '100%'
+};
+
 export default function CreateAgreementPage() {
     const aptId = 'e3abab76-6c94-419f-a7de-e97a01af62db';
     const [name, setName] = useState('');
@@ -50,14 +80,14 @@ export default function CreateAgreementPage() {
         }
     };
 
-    if (!aptInfo) return <div>Loading...</div>;
+    if (!aptInfo) return <div style={baseFont}>Cargando...</div>;
 
     const title = `Acuerdo adicional al contrato de arrendamiento de apartamento, casa u otra vivienda, ubicado en ${aptInfo.address}`;
 
     return (
         <form onSubmit={handleSubmit} style={formStyles}>
-            <h2>Por favor, introduzca sus datos para firmar el acuerdo:</h2>
-            <p>{title}</p>
+            <p style={baseFont}>{title}</p>
+            <h2 style={baseFont}>Por favor, introduzca sus datos para firmar el acuerdo:</h2>
             <input
                 placeholder="Nombre"
                 value={name}
@@ -73,7 +103,7 @@ export default function CreateAgreementPage() {
                 required
             />
             <input
-                type="date"
+                type="datetime-local"
                 placeholder="Fecha de finalización del contrato"
                 value={elapsed}
                 onChange={e => setElapsed(e.target.value)}
@@ -84,7 +114,3 @@ export default function CreateAgreementPage() {
         </form>
     );
 }
-
-const formStyles = { display: 'flex', flexDirection: 'column', gap: 10, width: 300 };
-const inputStyles = { padding: 8, fontSize: 16 };
-const buttonStyles = { padding: 10, background: '#4285f4', color: '#fff', border: 'none', cursor: 'pointer', width: '100%' };
