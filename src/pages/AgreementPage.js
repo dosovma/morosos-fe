@@ -116,6 +116,16 @@ export default function AgreementPage() {
 
     return (
         <div style={{ ...baseFont, display: 'flex', flexDirection: 'column', gap: 10, width: 300 }}>
+            <div dangerouslySetInnerHTML={{ __html: agreement.text }} />
+            <div>
+                <Switch
+                    checked={autoDetect}
+                    onChange={() => setAutoDetect(!autoDetect)}
+                    disabled={isSigned}
+                />{' '}
+                <span style={baseFont}>Activar sistema de desconexión automática.</span>
+            </div>
+            {errorMsg && <p style={{ color: '#50BCDA' }}>{errorMsg}</p>}
             <button
                 onClick={handleSign}
                 style={{
@@ -127,16 +137,6 @@ export default function AgreementPage() {
             >
                 Firmar
             </button>
-            <div>
-                <Switch
-                    checked={autoDetect}
-                    onChange={() => setAutoDetect(!autoDetect)}
-                    disabled={isSigned}
-                />{' '}
-                <span style={baseFont}>Activar sistema de desconexión automática.</span>
-            </div>
-            {errorMsg && <p style={{ color: '#50BCDA' }}>{errorMsg}</p>}
-            <div dangerouslySetInnerHTML={{ __html: agreement.text }} />
         </div>
     );
 }

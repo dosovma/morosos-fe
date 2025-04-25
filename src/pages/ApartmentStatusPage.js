@@ -125,9 +125,6 @@ export default function ApartmentStatusPage() {
 
     return (
         <div style={{ ...baseFont, width: 300 }}>
-            <button onClick={handleTurnOn} style={buttonStyles}>Encender</button>
-            <button onClick={handleTurnOff} style={buttonStyles}>Apagar</button>
-
             <h2 style={baseFont}>Propietario</h2>
             <p>Nombre: {landlord.name}</p>
             <p>Apellido: {landlord.surname}</p>
@@ -139,6 +136,9 @@ export default function ApartmentStatusPage() {
                     <span>{dev.name}</span>
                 </div>
             ))}
+
+            <button onClick={handleTurnOn} style={buttonStyles}>Encender</button>
+            <button onClick={handleTurnOff} style={buttonStyles}>Apagar</button>
         </div>
     );
 }
