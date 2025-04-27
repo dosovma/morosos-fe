@@ -67,6 +67,20 @@ export default function AgreementPage() {
     const [errorMsg, setErrorMsg] = useState('');
     const aptId = 'e3abab76-6c94-419f-a7de-e97a01af62db';
 
+    const fetchAgreement = async () => {
+        try {
+            const res = await fetch(
+                `https://gtw06or8tl.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/agreements/${id}`
+            );
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+            setAgreement(data);
+            setAutoDetect(data.auto_detect_system_enabled || false);
+        } catch {
+            alert('Error loading agreement');
+        }
+    };
+
     useEffect(() => {
         if (agreement) {
             document.title = `Acuerdo adicional al contrato de arrendamiento: ${agreement.address}`;
@@ -74,19 +88,6 @@ export default function AgreementPage() {
     }, [agreement]);
 
     useEffect(() => {
-        async function fetchAgreement() {
-            try {
-                const res = await fetch(
-                    `https://gtw06or8tl.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/agreements/${id}`
-                );
-                if (!res.ok) throw new Error();
-                const data = await res.json();
-                setAgreement(data);
-                setAutoDetect(data.auto_detect_system_enabled || false);
-            } catch {
-                alert('Error loading agreement');
-            }
-        }
         fetchAgreement();
     }, [id]);
 
@@ -107,7 +108,7 @@ export default function AgreementPage() {
             );
             if (!res.ok) throw new Error();
             await res.json();
-            setTimeout(() => fetchAgreement(), 0);
+            fetchAgreement();
         } catch {
             alert('Error signing agreement');
         }
@@ -118,7 +119,7 @@ export default function AgreementPage() {
     const isSigned = agreement.status === 'signed';
 
     return (
-        <div style={{ ...baseFont, flexDirection: 'column', gap: 10, width: 300 }}>
+        <div style={{ ...baseFont, display: 'flex', flexDirection: 'column', gap: 10, width: 300 }}>
             <div dangerouslySetInnerHTML={{ __html: agreement.text }} />
             <div>
                 <Switch
