@@ -61,6 +61,9 @@ function Switch({ checked, onChange, disabled = false }) {
 }
 
 export default function AgreementPage() {
+    useEffect(() => {
+        document.title = 'Acuerdo adicional ya preparado';
+    }, []);
     const { id } = useParams();
     const [agreement, setAgreement] = useState(null);
     const [autoDetect, setAutoDetect] = useState(false);
@@ -80,12 +83,6 @@ export default function AgreementPage() {
             alert('Error loading agreement');
         }
     };
-
-    useEffect(() => {
-        if (agreement) {
-            document.title = `Acuerdo adicional al contrato de arrendamiento: ${agreement.address}`;
-        }
-    }, [agreement]);
 
     useEffect(() => {
         fetchAgreement();

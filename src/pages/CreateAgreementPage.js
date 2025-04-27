@@ -32,18 +32,13 @@ const buttonStyles = {
 };
 
 export default function CreateAgreementPage() {
+    document.title = 'CONTRATO';
     const [aptInfo, setAptInfo] = useState(null);
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [elapsed, setElapsed] = useState('');
     const navigate = useNavigate();
     const aptId = 'e3abab76-6c94-419f-a7de-e97a01af62db';
-
-    useEffect(() => {
-        if (aptInfo) {
-            document.title = `CONTRATO: ${aptInfo.address}`;
-        }
-    }, [aptInfo]);
 
     useEffect(() => {
         async function fetchApt() {
