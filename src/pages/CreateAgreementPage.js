@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const baseFont = {
     fontFamily: '"Open Sans", sans-serif',
@@ -32,17 +32,18 @@ const buttonStyles = {
 };
 
 export default function CreateAgreementPage() {
+    const [aptInfo, setAptInfo] = useState(null);
+    const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
+    const [elapsed, setElapsed] = useState('');
+    const navigate = useNavigate();
+    const aptId = 'e3abab76-6c94-419f-a7de-e97a01af62db';
+
     useEffect(() => {
         if (aptInfo) {
             document.title = `CONTRATO: ${aptInfo.address}`;
         }
     }, [aptInfo]);
-    const aptId = 'e3abab76-6c94-419f-a7de-e97a01af62db';
-    const [name, setName] = useState('');
-    const [surname, setSurname] = useState('');
-    const [elapsed, setElapsed] = useState('');
-    const [aptInfo, setAptInfo] = useState(null);
-    const navigate = useNavigate();
 
     useEffect(() => {
         async function fetchApt() {
@@ -50,38 +51,31 @@ export default function CreateAgreementPage() {
                 const res = await fetch(
                     `https://gtw06or8tl.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}`
                 );
-                if (!res.ok) throw new Error('Failed to fetch apartment info');
+                if (!res.ok) throw new Error();
                 const data = await res.json();
                 setAptInfo(data);
-            } catch (err) {
-                console.error(err);
+            } catch {
                 alert('Error loading apartment information');
             }
         }
-
         fetchApt();
     }, [aptId]);
 
     const handleSubmit = async e => {
         e.preventDefault();
-        const payload = {
-            tenant: {name, surname},
-            elapsed_at: elapsed
-        };
         try {
             const res = await fetch(
                 `https://gtw06or8tl.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/agreements`,
                 {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(payload)
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tenant: { name, surname }, elapsed_at: elapsed })
                 }
             );
-            if (!res.ok) throw new Error('Failed to create agreement');
-            const data = await res.json();
-            navigate(`/agreement/${data.agreement_id}`);
-        } catch (err) {
-            console.error(err);
+            if (!res.ok) throw new Error();
+            const { agreement_id } = await res.json();
+            navigate(`/agreement/${agreement_id}`);
+        } catch {
             alert('Error creating agreement');
         }
     };
@@ -113,13 +107,12 @@ export default function CreateAgreementPage() {
             <label style={baseFont}>Fecha de finalización del contrato</label>
             <input
                 type="datetime-local"
-                placeholder="Fecha de finalización del contrato"
                 value={elapsed}
                 onChange={e => setElapsed(e.target.value)}
                 style={inputStyles}
                 required
             />
-            <p style={{fontFamily: '"Open Sans", sans-serif', fontSize: 12, color: '#2B3133', marginTop: 4}}>
+            <p style={{ fontFamily: '"Open Sans", sans-serif', fontSize: 12, color: '#2B3133', marginTop: 4 }}>
                 Esta es la fecha en la que finaliza su estancia y se activará la desconexión automática de los servicios
             </p>
             <button type="submit" style={buttonStyles}>Enviar</button>

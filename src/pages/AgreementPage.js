@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 const baseFont = {
     fontFamily: '"Open Sans", sans-serif',
@@ -17,9 +17,9 @@ const buttonStyles = {
     width: '100%'
 };
 
-function Switch({checked, onChange, disabled = false}) {
-    const labelStyle = {position: 'relative', display: 'inline-block', width: 40, height: 20};
-    const inputStyle = {opacity: 0, width: 0, height: 0};
+function Switch({ checked, onChange, disabled = false }) {
+    const labelStyle = { position: 'relative', display: 'inline-block', width: 40, height: 20 };
+    const inputStyle = { opacity: 0, width: 0, height: 0 };
     const sliderBase = {
         position: 'absolute',
         cursor: disabled ? 'default' : 'pointer',
@@ -27,11 +27,11 @@ function Switch({checked, onChange, disabled = false}) {
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: '#99A7BC',
+        backgroundColor: disabled ? '#99A7BC' : '#ccc',
         transition: '.4s',
         borderRadius: 20
     };
-    const sliderChecked = checked ? {backgroundColor: disabled ? '#99A7BC' : '#0E6FAA'} : {};
+    const sliderChecked = checked ? { backgroundColor: disabled ? '#99A7BC' : '#0E6FAA' } : {};
     const knobBase = {
         position: 'absolute',
         height: 16,
@@ -42,7 +42,7 @@ function Switch({checked, onChange, disabled = false}) {
         transition: '.4s',
         borderRadius: '50%'
     };
-    const knobChecked = {transform: 'translateX(20px)'};
+    const knobChecked = { transform: 'translateX(20px)' };
 
     return (
         <label style={labelStyle}>
@@ -53,41 +53,40 @@ function Switch({checked, onChange, disabled = false}) {
                 onChange={onChange}
                 style={inputStyle}
             />
-            <span style={{...sliderBase, ...sliderChecked}}>
-        <span style={{...knobBase, ...(checked ? knobChecked : {})}}/>
+            <span style={{ ...sliderBase, ...sliderChecked }}>
+        <span style={{ ...knobBase, ...(checked ? knobChecked : {}) }} />
       </span>
         </label>
     );
 }
 
 export default function AgreementPage() {
-    useEffect(() => {
-        if (agreement) {
-            document.title = `Acuerdo adicional al contrato de arrendamiento: ${agreement.address}`;
-        }
-    }, [agreement]);
-    const {id} = useParams();
+    const { id } = useParams();
     const [agreement, setAgreement] = useState(null);
     const [autoDetect, setAutoDetect] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
     const aptId = 'e3abab76-6c94-419f-a7de-e97a01af62db';
 
-    const fetchAgreement = async () => {
-        try {
-            const res = await fetch(
-                `https://gtw06or8tl.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/agreements/${id}`
-            );
-            if (!res.ok) throw new Error('Failed to fetch agreement');
-            const data = await res.json();
-            setAgreement(data);
-            setAutoDetect(data.auto_detect_system_enabled || false);
-        } catch (err) {
-            console.error(err);
-            alert('Error loading agreement');
+    useEffect(() => {
+        if (agreement) {
+            document.title = `Acuerdo adicional al contrato de arrendamiento: ${agreement.address}`;
         }
-    };
+    }, [agreement]);
 
     useEffect(() => {
+        async function fetchAgreement() {
+            try {
+                const res = await fetch(
+                    `https://gtw06or8tl.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/agreements/${id}`
+                );
+                if (!res.ok) throw new Error();
+                const data = await res.json();
+                setAgreement(data);
+                setAutoDetect(data.auto_detect_system_enabled || false);
+            } catch {
+                alert('Error loading agreement');
+            }
+        }
         fetchAgreement();
     }, [id]);
 
@@ -102,15 +101,14 @@ export default function AgreementPage() {
                 `https://gtw06or8tl.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/agreements/${id}/statuses`,
                 {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({action: 'sign'})
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'sign' })
                 }
             );
-            if (!res.ok) throw new Error('Failed to sign agreement');
+            if (!res.ok) throw new Error();
             await res.json();
-            fetchAgreement();
-        } catch (err) {
-            console.error(err);
+            setTimeout(() => fetchAgreement(), 0);
+        } catch {
             alert('Error signing agreement');
         }
     };
@@ -120,8 +118,8 @@ export default function AgreementPage() {
     const isSigned = agreement.status === 'signed';
 
     return (
-        <div style={{...baseFont, display: 'flex', flexDirection: 'column', gap: 10, width: 300}}>
-            <div dangerouslySetInnerHTML={{__html: agreement.text}}/>
+        <div style={{ ...baseFont, flexDirection: 'column', gap: 10, width: 300 }}>
+            <div dangerouslySetInnerHTML={{ __html: agreement.text }} />
             <div>
                 <Switch
                     checked={autoDetect}
@@ -130,14 +128,10 @@ export default function AgreementPage() {
                 />{' '}
                 <span style={baseFont}>Activar sistema de desconexión automática.</span>
             </div>
-            {errorMsg && <p style={{color: '#50BCDA'}}>{errorMsg}</p>}
+            {errorMsg && <p style={{ color: '#50BCDA' }}>{errorMsg}</p>}
             <button
                 onClick={handleSign}
-                style={{
-                    ...buttonStyles,
-                    background: isSigned ? '#99A7BC' : '#0E6FAA',
-                    cursor: isSigned ? 'not-allowed' : 'pointer'
-                }}
+                style={{ ...buttonStyles, background: isSigned ? '#99A7BC' : '#0E6FAA', cursor: isSigned ? 'not-allowed' : 'pointer' }}
                 disabled={isSigned}
             >
                 Firmar
