@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
 const baseFont = {
     fontFamily: '"Open Sans", sans-serif',
@@ -32,6 +32,11 @@ const buttonStyles = {
 };
 
 export default function CreateAgreementPage() {
+    useEffect(() => {
+        if (aptInfo) {
+            document.title = `CONTRATO: ${aptInfo.address}`;
+        }
+    }, [aptInfo]);
     const aptId = 'e3abab76-6c94-419f-a7de-e97a01af62db';
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
@@ -53,13 +58,14 @@ export default function CreateAgreementPage() {
                 alert('Error loading apartment information');
             }
         }
+
         fetchApt();
     }, [aptId]);
 
     const handleSubmit = async e => {
         e.preventDefault();
         const payload = {
-            tenant: { name, surname },
+            tenant: {name, surname},
             elapsed_at: elapsed
         };
         try {
@@ -67,7 +73,7 @@ export default function CreateAgreementPage() {
                 `https://gtw06or8tl.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/agreements`,
                 {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(payload)
                 }
             );
@@ -82,12 +88,13 @@ export default function CreateAgreementPage() {
 
     if (!aptInfo) return <div style={baseFont}>Cargando...</div>;
 
-    const title = `Acuerdo adicional al contrato de arrendamiento de apartamento, casa u otra vivienda, ubicado en ${aptInfo.address}`;
+    const title = `Acuerdo adicional al contrato de arrendamiento de apartamento, casa u otra vivienda, ubicada en ${aptInfo.address}`;
 
     return (
         <form onSubmit={handleSubmit} style={formStyles}>
             <p style={baseFont}>{title}</p>
             <h2 style={baseFont}>Por favor, introduzca sus datos para firmar el acuerdo:</h2>
+            <label style={baseFont}>Nombre</label>
             <input
                 placeholder="Nombre"
                 value={name}
@@ -95,6 +102,7 @@ export default function CreateAgreementPage() {
                 style={inputStyles}
                 required
             />
+            <label style={baseFont}>Apellido</label>
             <input
                 placeholder="Apellido"
                 value={surname}
@@ -102,6 +110,7 @@ export default function CreateAgreementPage() {
                 style={inputStyles}
                 required
             />
+            <label style={baseFont}>Fecha de finalización del contrato</label>
             <input
                 type="datetime-local"
                 placeholder="Fecha de finalización del contrato"
@@ -110,6 +119,9 @@ export default function CreateAgreementPage() {
                 style={inputStyles}
                 required
             />
+            <p style={{fontFamily: '"Open Sans", sans-serif', fontSize: 12, color: '#2B3133', marginTop: 4}}>
+                Esta es la fecha en la que finaliza su estancia y se activará la desconexión automática de los servicios
+            </p>
             <button type="submit" style={buttonStyles}>Enviar</button>
         </form>
     );

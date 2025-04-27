@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 
 const baseFont = {
     fontFamily: '"Open Sans", sans-serif',
@@ -17,9 +17,9 @@ const buttonStyles = {
     marginBottom: 10
 };
 
-function Switch({ checked, disabled = false }) {
-    const labelStyle = { position: 'relative', display: 'inline-block', width: 40, height: 20 };
-    const inputStyle = { opacity: 0, width: 0, height: 0 };
+function Switch({checked, disabled = false}) {
+    const labelStyle = {position: 'relative', display: 'inline-block', width: 40, height: 20};
+    const inputStyle = {opacity: 0, width: 0, height: 0};
     const sliderBase = {
         position: 'absolute',
         cursor: 'default',
@@ -31,7 +31,7 @@ function Switch({ checked, disabled = false }) {
         transition: '.4s',
         borderRadius: 20
     };
-    const sliderChecked = { backgroundColor: '#0E6FAA' };
+    const sliderChecked = {backgroundColor: '#0E6FAA'};
     const knobBase = {
         position: 'absolute',
         height: 16,
@@ -42,7 +42,7 @@ function Switch({ checked, disabled = false }) {
         transition: '.4s',
         borderRadius: '50%'
     };
-    const knobChecked = { transform: 'translateX(20px)' };
+    const knobChecked = {transform: 'translateX(20px)'};
 
     return (
         <label style={labelStyle}>
@@ -52,16 +52,22 @@ function Switch({ checked, disabled = false }) {
                 disabled={disabled}
                 style={inputStyle}
             />
-            <span style={{ ...sliderBase, ...(checked ? sliderChecked : {}) }}>
-        <span style={{ ...knobBase, ...(checked ? knobChecked : {}) }} />
+            <span style={{...sliderBase, ...(checked ? sliderChecked : {})}}>
+        <span style={{...knobBase, ...(checked ? knobChecked : {})}}/>
       </span>
         </label>
     );
 }
 
 export default function ApartmentStatusPage() {
+    useEffect(() => {
+        if (landlord) {
+            document.title = `PRIVADO: ${address}`;
+        }
+    }, [address]);
     const [landlord, setLandlord] = useState(null);
     const [devices, setDevices] = useState([]);
+    const [address, setAddress] = useState("");
     const aptId = 'e3abab76-6c94-419f-a7de-e97a01af62db';
 
     const fetchStatus = async () => {
@@ -73,6 +79,7 @@ export default function ApartmentStatusPage() {
             const data = await res.json();
             setLandlord(data.landlord);
             setDevices(data.devices || []);
+            setAddress(data.address);
         } catch (err) {
             console.error(err);
             alert('Error loading apartment status');
@@ -89,8 +96,8 @@ export default function ApartmentStatusPage() {
                 `https://gtw06or8tl.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/statuses`,
                 {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'apartment_on' })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({action: 'apartment_on'})
                 }
             );
             if (!res.ok) throw new Error('Failed to turn on apartment');
@@ -108,8 +115,8 @@ export default function ApartmentStatusPage() {
                 `https://gtw06or8tl.execute-api.eu-north-1.amazonaws.com/test/api/v1/apartments/${aptId}/statuses`,
                 {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'apartment_off' })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({action: 'apartment_off'})
                 }
             );
             if (!res.ok) throw new Error('Failed to turn off apartment');
@@ -124,15 +131,17 @@ export default function ApartmentStatusPage() {
     if (!landlord) return <div style={baseFont}>Cargando...</div>;
 
     return (
-        <div style={{ ...baseFont, width: 300 }}>
+        <div style={{...baseFont, width: 300}}>
             <h2 style={baseFont}>Propietario</h2>
             <p>Nombre: {landlord.name}</p>
             <p>Apellido: {landlord.surname}</p>
-
             <h2 style={baseFont}>Control de electricidad y agua</h2>
+            <p style={{fontFamily: '"Open Sans", sans-serif', fontSize: 12, color: '#2B3133', marginTop: 4}}>
+                Estado actual de los servicios
+            </p>
             {devices.map(dev => (
-                <div key={dev.id} style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '5px 0' }}>
-                    <Switch checked={dev.on} disabled />
+                <div key={dev.id} style={{display: 'flex', alignItems: 'center', gap: 8, margin: '5px 0'}}>
+                    <Switch checked={dev.on} disabled/>
                     <span>{dev.name}</span>
                 </div>
             ))}
