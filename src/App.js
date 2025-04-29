@@ -10,9 +10,9 @@ export default function App() {
         <div style={{ fontFamily: '"Open Sans", sans-serif', padding: 20 }}>
             <Routes>
                 <Route path="/" element={<ApartmentSelectionPage />} />
+                <Route path="/agreement" element={<CreateAgreementPage />} />
                 <Route path="/agreement/:id" element={<AgreementPage />} />
                 <Route path="/apartment/:aptId" element={<ApartmentStatusPage />} />
-                <Route path="/agreement" element={<CreateAgreementPage />} />
             </Routes>
         </div>
     );
