@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 const baseFont = { fontFamily: '"Open Sans", sans-serif', fontSize: 16, color: '#2B3133' };
 const formStyles = { ...baseFont, display: 'flex', flexDirection: 'column', gap: 10, width: 300 };
-const inputStyles = { ...baseFont, padding: 8, border: '1px solid #ccc' };
+const inputStyles = { ...baseFont, padding: 8, border: '1px solid #ccc', backgroundColor: '#fff' };
 const buttonStyles = { ...baseFont, padding: 10, background: '#0E6FAA', color: '#fff', border: 'none', cursor: 'pointer', width: '100%' };
 
 export default function CreateAgreementPage() {
