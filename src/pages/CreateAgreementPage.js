@@ -60,7 +60,7 @@ export default function CreateAgreementPage() {
             <p style={{ fontFamily: '"Open Sans", sans-serif', fontSize: 12, color: '#2B3133', marginTop: 4 }}>
                 Esta es la fecha en la que finaliza su estancia y se activará la desconexión automática de los servicios
             </p>
-            <button type="submit" style={buttonStyles}>Enviar</button>
+            <button type="submit" style={buttonStyles}>Crear</button>
         </form>
     );
 }
